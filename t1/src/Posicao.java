@@ -25,8 +25,6 @@ public class Posicao {
 
    @Override
    public String toString() {
-      return "(" + posX +
-          ", " + posY +
-          ')';
+      return "(" + posX + ", " + posY + ')';
    }
 }

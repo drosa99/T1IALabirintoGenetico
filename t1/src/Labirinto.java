@@ -100,7 +100,8 @@ public class Labirinto {
 				this.paredes.add(p);
 		}
 
-		public void printaLabirinto(int[][] labirinto) {
+		public String printaLabirinto(int[][] labirinto) {
+				String retorno = "\n \n ";
 				for (int y = 0; y < labirinto.length; y++) {
 						for (int x = 0; x < labirinto[y].length; x++) {
 								if (labirinto[x][y] == 2 || labirinto[x][y] == 3) {
@@ -115,10 +116,13 @@ public class Labirinto {
 										System.out.print(ANSI_RED + labirinto[x][y]);
 								}
 								System.out.print(" " + ANSI_RESET);
+								retorno = retorno.concat(labirinto[x][y] + " ");
 						}
 						System.out.println(" \t" + ANSI_RESET);
+						retorno = retorno.concat("\n ");
 				}
 				System.out.println("____________________________________________" + ANSI_RESET);
+				return retorno.concat("___________________________________________ \n");
 		}
 
 

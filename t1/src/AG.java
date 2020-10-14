@@ -18,7 +18,7 @@ public class AG {
 				this.chanceMutacao = chanceMutacao;
 		}
 
-		public Cromossomo genetica() {
+		public Cromossomo genetica(int qtdGeracoesPrinte) {
 				System.out.println(LocalDateTime.now());
 				boolean achouSaida = false;
 				List<Cromossomo> populacao = iniciaPopulacao();
@@ -27,7 +27,7 @@ public class AG {
 
 				while (!achouSaida) {
 
-						populacao.forEach(cromossomo -> aptidao(cromossomo));
+						populacao.forEach(this::aptidao);
 
 						List<Cromossomo> ordenadaPorAptidao = populacao.stream().sorted(Comparator.comparing(Cromossomo::getScore)).collect(Collectors.toList());
 						vencedor = populacao.stream().filter(Cromossomo::isChegou).findFirst().orElse(null);
@@ -38,13 +38,20 @@ public class AG {
 								return vencedor;
 						}
 
-						if (i % 2000 == 0) {
-								System.out.println("i" + i + " score: " + ordenadaPorAptidao.get(0).getScore());
+						if (i % qtdGeracoesPrinte == 0) {
+								System.out.println("Geracao: " + i);
+								System.out.println("Melhor cromossomo com score: " + ordenadaPorAptidao.get(0).getScore());
+								ordenadaPorAptidao.get(0).getPosicoes().forEach(posicao -> System.out.print(posicao.toString() + ", "));
+								System.out.println("--------------------------------------------------------------------------- \n");
 						}
 
 
 						List<Cromossomo> metadeMaisApta = ordenadaPorAptidao.subList(0, ordenadaPorAptidao.size() / 2);
 						populacao.clear();
+						if (i != 0 && i % 150000 == 0) {
+								System.out.println(" \n RECOMECANDO.... \n");
+								metadeMaisApta = iniciaPopulacao().subList(0, ordenadaPorAptidao.size() / 2);
+						}
 						populacao = crossOver(duplicaCromossomo(metadeMaisApta));
 						i++;
 				}
