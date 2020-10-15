@@ -13,39 +13,39 @@ public class AEstrela {
 		private final int[][] labirinto;
 		private final int tamanho;
 
-		private final Nodo inicio;
-		private final Nodo fim;
-		private List<Nodo> caminho;
+		private final Posicao inicio;
+		private final Posicao fim;
+		private List<Posicao> caminho;
 
-		private final Set<Nodo> nodosFechados;
-		private final Set<Nodo> nodosAbertos;
-		private final HashMap<Nodo, Nodo> veioDe;
-		private final HashMap<Nodo, Integer> gScore;
-		private final HashMap<Nodo, Integer> fScore;
+		private final Set<Posicao> nodosFechados;
+		private final Set<Posicao> nodosAbertos;
+		private final HashMap<Posicao, Posicao> veioDe;
+		private final HashMap<Posicao, Integer> gScore;
+		private final HashMap<Posicao, Integer> fScore;
 
-		public AEstrela(int[][] labirinto, int posX, int posY, int posXf, int posYf, int tamanho) throws Exception {
+		public AEstrela(int[][] labirinto, Posicao inicio, Posicao fim, int tamanho) {
 				this.labirinto = labirinto;
 				this.tamanho = tamanho;
-				this.inicio = new Nodo(posX, posY);
-				this.fim = new Nodo(posXf, posYf);
-				this.caminho = new LinkedList<>();
+				this.inicio = new Posicao(inicio.getPosX(), inicio.getPosY());
+				this.fim = new Posicao(fim.getPosX(), fim.getPosY());
+				this.caminho = new LinkedList<Posicao>();
 
-				this.nodosFechados = new HashSet<>();
-				this.nodosAbertos = new HashSet<>();
+				this.nodosFechados = new HashSet<Posicao>();
+				this.nodosAbertos = new HashSet<Posicao>();
 				nodosAbertos.add(inicio);
-				this.veioDe = new HashMap<>();
-				this.gScore = new HashMap<>();
+				this.veioDe = new HashMap<Posicao, Posicao>();
+				this.gScore = new HashMap<Posicao, Integer>();
 				this.gScore.put(inicio, 0);
-				this.fScore = new HashMap<>();
+				this.fScore = new HashMap<Posicao, Integer>();
 				this.fScore.put(inicio, heuristica(inicio));
 		}
 
 		public void executa() throws Exception {
-				Optional<Nodo> _atual = Optional.empty();
+				Optional<Posicao> _atual = Optional.empty();
 				int i = 1;
 				while (!nodosAbertos.isEmpty()) {
 						_atual = nodosAbertos.stream().min(Comparator.comparingInt(fScore::get)); //pega o nodo aberto com o menor score da heuristica -> mais promissor
-						Nodo atual = _atual.get();
+						Posicao atual = _atual.get();
 
 						Thread.sleep(250);
 						System.out.println("---------------------------------" + ANSI_RESET);
@@ -89,7 +89,7 @@ public class AEstrela {
 		}
 
 		//monta a linked list do caminho percorrido, partindo do nodo final ate o nodo de inicio, utilizando o dicionario
-		public void reconstroePassos(Nodo nodo) {
+		public void reconstroePassos(Posicao nodo) {
 				caminho.add(nodo);
 				while (veioDe.containsKey(nodo)) {
 						nodo = veioDe.get(nodo);
@@ -98,34 +98,34 @@ public class AEstrela {
 				}
 		}
 
-		private List<Nodo> getVizinhos(Nodo atual) throws Exception {
-				List<Nodo> vizinhos = new ArrayList<>();
+		private List<Posicao> getVizinhos(Posicao atual) throws Exception {
+				List<Posicao> vizinhos = new ArrayList<>();
 
-				if (atual.x - 1 >= 0 && labirinto[atual.x - 1][atual.y] != 1) {// esquerda
-						vizinhos.add(new Nodo(atual.x - 1, atual.y));
+				if (atual.getPosX() - 1 >= 0 && labirinto[atual.getPosX() - 1][atual.getPosY()] != 1) {// esquerda
+						vizinhos.add(new Posicao(atual.getPosX() - 1, atual.getPosY()));
 				}
-				if (atual.y + 1 < tamanho && labirinto[atual.x][atual.y + 1] != 1) {// baixo
-						vizinhos.add(new Nodo(atual.x, atual.y + 1));
+				if (atual.getPosY() + 1 < tamanho && labirinto[atual.getPosX()][atual.getPosY() + 1] != 1) {// baixo
+						vizinhos.add(new Posicao(atual.getPosX(), atual.getPosY() + 1));
 				}
-				if (atual.x + 1 < tamanho && labirinto[atual.x + 1][atual.y] != 1) {// direita
-						vizinhos.add(new Nodo(atual.x + 1, atual.y));
+				if (atual.getPosX() + 1 < tamanho && labirinto[atual.getPosX() + 1][atual.getPosY()] != 1) {// direita
+						vizinhos.add(new Posicao(atual.getPosX() + 1, atual.getPosY()));
 				}
-				if (atual.y - 1 >= 0 && labirinto[atual.y - 1][atual.x] != 1) {// cima
-						vizinhos.add(new Nodo(atual.x, atual.y - 1));
+				if (atual.getPosY() - 1 >= 0 && labirinto[atual.getPosX()][atual.getPosY() - 1] != 1) {// cima
+						vizinhos.add(new Posicao(atual.getPosX(), atual.getPosY() - 1));
 				}
 
 				return vizinhos;
 		}
 
 		//distancia euclidiana para a funcao heuristica
-		public int heuristica(Nodo nodo) {
-				return Math.abs(nodo.y - fim.y) + Math.abs(nodo.x - fim.x);
+		public int heuristica(Posicao nodo) {
+				return Math.abs(nodo.getPosY() - fim.getPosY()) + Math.abs(nodo.getPosX() - fim.getPosX());
 		}
 
 		public void printMazeWithShortestPath() throws Exception {
 				for (int i = 0; i < labirinto.length; i++) {
 						for (int j = 0; j < labirinto[i].length; j++) {
-								if (caminho.contains(new Nodo(j, i))) {
+								if (caminho.contains(new Posicao(j, i))) {
 										System.out.print(ANSI_BLUE + "X");
 								} else if (labirinto[j][i] == 0) {
 										System.out.print(ANSI_WHITE + "0");
@@ -140,11 +140,11 @@ public class AEstrela {
 				}
 		}
 
-		public void printMazeWithAStarPath(Nodo n) throws Exception {
+		public void printMazeWithAStarPath(Posicao n) {
 				reconstroePassos(n);
 				for (int i = 0; i < labirinto.length; i++) {
 						for (int j = 0; j < labirinto[i].length; j++) {
-								if (caminho.contains(new Nodo(j, i))) {
+								if (caminho.contains(new Posicao(j, i))) {
 										System.out.print(ANSI_BLUE + "X");
 								} else if (labirinto[j][i] == 0) {
 										System.out.print(ANSI_WHITE + "0");
@@ -157,22 +157,6 @@ public class AEstrela {
 						}
 						System.out.println(" " + ANSI_RESET);
 				}
-				caminho = new LinkedList<>();
-		}
-
-		private class Nodo {
-				public int x, y;
-
-				Nodo(int x, int y) throws Exception {
-						if (x < 0 || x >= tamanho || y < 0 || y >= tamanho)
-								throw new Exception("Nodo invalido: x = " + x + "\n y = " + y);
-						this.x = x;
-						this.y = y;
-				}
-
-				@Override
-				public boolean equals(Object obj) {
-						return this.x == ((Nodo) obj).x && this.y == ((Nodo) obj).y;
-				}
+				caminho = new LinkedList<Posicao>();
 		}
 }
