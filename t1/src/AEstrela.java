@@ -40,22 +40,22 @@ public class AEstrela {
 				this.fScore.put(inicio, heuristica(inicio));
 		}
 
-		public void executa() throws Exception {
+		public List<Posicao> executa() {
 				Optional<Posicao> _atual = Optional.empty();
 				int i = 1;
 				while (!nodosAbertos.isEmpty()) {
 						_atual = nodosAbertos.stream().min(Comparator.comparingInt(fScore::get)); //pega o nodo aberto com o menor score da heuristica -> mais promissor
 						Posicao atual = _atual.get();
 
-						Thread.sleep(250);
-						System.out.println("---------------------------------" + ANSI_RESET);
-						System.out.println("Passo: " + i);
 						try {
-								printMazeWithAStarPath(atual);
-								i++;
-						} catch (Exception e) {
+								Thread.sleep(250);
+						} catch (InterruptedException e) {
 								e.printStackTrace();
 						}
+						System.out.println("---------------------------------" + ANSI_RESET);
+						System.out.println("Passo: " + i);
+						printLabirintoAPartirPosicao(atual);
+						i++;
 
 						if (atual.equals(fim))
 								break;
@@ -86,9 +86,10 @@ public class AEstrela {
 								});
 				}
 				_atual.ifPresent(this::reconstroePassos);
+				return caminho;
 		}
 
-		//monta a linked list do caminho percorrido, partindo do nodo final ate o nodo de inicio, utilizando o dicionario
+		//monta a lista do caminho percorrido, partindo do nodo final ate o nodo de inicio, utilizando o dicionario
 		public void reconstroePassos(Posicao nodo) {
 				caminho.add(nodo);
 				while (veioDe.containsKey(nodo)) {
@@ -98,7 +99,7 @@ public class AEstrela {
 				}
 		}
 
-		private List<Posicao> getVizinhos(Posicao atual) throws Exception {
+		private List<Posicao> getVizinhos(Posicao atual) {
 				List<Posicao> vizinhos = new ArrayList<>();
 
 				if (atual.getPosX() - 1 >= 0 && labirinto[atual.getPosX() - 1][atual.getPosY()] != 1) {// esquerda
@@ -122,41 +123,34 @@ public class AEstrela {
 				return Math.abs(nodo.getPosY() - fim.getPosY()) + Math.abs(nodo.getPosX() - fim.getPosX());
 		}
 
-		public void printMazeWithShortestPath() throws Exception {
+		public String printaLabirintoComCaminho() {
+				String retorno = "\n \n ";
 				for (int i = 0; i < labirinto.length; i++) {
 						for (int j = 0; j < labirinto[i].length; j++) {
 								if (caminho.contains(new Posicao(j, i))) {
 										System.out.print(ANSI_BLUE + "X");
+										retorno = retorno.concat("X" + " ");
 								} else if (labirinto[j][i] == 0) {
 										System.out.print(ANSI_WHITE + "0");
+										retorno = retorno.concat("0" + " ");
 								} else if (labirinto[j][i] == 2 || labirinto[j][i] == 3) {
 										System.out.print(ANSI_YELLOW + labirinto[j][i]);
+										retorno = retorno.concat(labirinto[j][i] + " ");
 								} else {
 										System.out.print(ANSI_RED + labirinto[j][i]);
+										retorno = retorno.concat(labirinto[j][i] + " ");
 								}
 								System.out.print(" " + ANSI_RESET);
 						}
 						System.out.println(" " + ANSI_RESET);
+						retorno = retorno.concat("\n ");
 				}
+				return retorno.concat("___________________________________________ \n");
 		}
 
-		public void printMazeWithAStarPath(Posicao n) {
+		public void printLabirintoAPartirPosicao(Posicao n) {
 				reconstroePassos(n);
-				for (int i = 0; i < labirinto.length; i++) {
-						for (int j = 0; j < labirinto[i].length; j++) {
-								if (caminho.contains(new Posicao(j, i))) {
-										System.out.print(ANSI_BLUE + "X");
-								} else if (labirinto[j][i] == 0) {
-										System.out.print(ANSI_WHITE + "0");
-								} else if (labirinto[j][i] == 2 || labirinto[j][i] == 3) {
-										System.out.print(ANSI_YELLOW + labirinto[j][i]);
-								} else {
-										System.out.print(ANSI_RED + labirinto[j][i]);
-								}
-								System.out.print(" " + ANSI_RESET);
-						}
-						System.out.println(" " + ANSI_RESET);
-				}
+				printaLabirintoComCaminho();
 				caminho = new LinkedList<Posicao>();
 		}
 }

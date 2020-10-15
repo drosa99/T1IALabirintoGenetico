@@ -28,7 +28,7 @@ public class AG {
 				Cromossomo vencedor = null;
 				int i = 0;
 
-				//roda enquanto nao encontra a saida
+				//Ponto de parada: solucao otima -> achar a saida; apos um certo numero de geracoes -> recomeca
 				while (!achouSaida) {
 
 						//calcula a aptidao de todos os cromossomos da populacao
@@ -128,7 +128,7 @@ public class AG {
 		 * Para cada novo cromossomo da nova populacao:
 		 * 	Seleciona 2 cromossomos da antiga populacao por torneio
 		 * 	Randomiza um indice que sera o ponto de corte para o crossover destes 2 cromossomos
-		 * 	Mergeia estes 2 cromossomos em um novo, sendo de 0 a ponto de corte, o cromossomo pai; sendo do ponto de corte ao final do trajto, o cromossomo mae;
+		 * 	Cruzamento uniponto com ponto de corte randomico: Mergeia estes 2 cromossomos em um novo, sendo de 0 a ponto de corte, o cromossomo pai; sendo do ponto de corte ao final do trajto, o cromossomo mae;
 		 * 	Faz mutacao do trajeto deste novo cromossomo
 		 * 	Adiciona o novo cromossomo na nova populacao
 		 * */

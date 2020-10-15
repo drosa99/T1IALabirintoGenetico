@@ -3,6 +3,7 @@ package src;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 
 public class Main {
 
@@ -49,18 +50,29 @@ public class Main {
 						String labPrintado = lab.printaLabirinto(lab.getLab());
 						fw.write(labPrintado);
 
-						fw.close();
 
 						Labirinto labAEstrela = new Labirinto(f);
 						AEstrela aEstrela = null;
-						try {
-								aEstrela = new AEstrela(labAEstrela.getLab(), labAEstrela.getInicio().getPosX(), labAEstrela.getInicio().getPosY(), labAEstrela.getFim().getPosX(), labAEstrela.getFim().getPosY(), labAEstrela.getLab().length);
-								aEstrela.executa();
-								System.out.println("----------------------------------");
-								aEstrela.printMazeWithShortestPath();
-						} catch (Exception e) {
-								e.printStackTrace();
-						}
+						aEstrela = new AEstrela(labAEstrela.getLab(), labAEstrela.getInicio(), labAEstrela.getFim(), labAEstrela.getLab().length);
+						List<Posicao> caminhoPercorrido = aEstrela.executa();
+						System.out.println("----------------------------------");
+						System.out.println("\n CAMINHO A* \n");
+						fw.write("\n CAMINHO A* \n");
+						caminhoPercorrido.forEach(posicao -> {
+								String posicaoPrintar = posicao.toString() + ", ";
+								System.out.print(posicaoPrintar);
+								try {
+										fw.write(posicaoPrintar);
+								} catch (IOException e) {
+										e.printStackTrace();
+								}
+
+						});
+						System.out.println("\n");
+						String aEstrelaPrintado = "\n" + aEstrela.printaLabirintoComCaminho();
+						fw.write(aEstrelaPrintado);
+
+						fw.close();
 
 				} catch (IOException e) {
 						e.printStackTrace();
