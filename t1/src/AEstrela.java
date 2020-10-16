@@ -118,7 +118,7 @@ public class AEstrela {
 				return vizinhos;
 		}
 
-		//distancia euclidiana para a funcao heuristica
+		//distancia de manhattan para a funcao heuristica
 		public int heuristica(Posicao nodo) {
 				return Math.abs(nodo.getPosY() - fim.getPosY()) + Math.abs(nodo.getPosX() - fim.getPosX());
 		}

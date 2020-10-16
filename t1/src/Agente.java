@@ -53,11 +53,6 @@ public class Agente {
 
 				if (labirinto.getParedes().stream().anyMatch(it -> novaPosicao.equals(it)) || labirinto.isParede(novaPosicao)) {
 						this.penalidades += PENALIDADE_PAREDE;
-//						if(caminhoPercorrido.stream().anyMatch(it -> it.equals(posicaoAtual))){
-//								//nao saiu do lugar e bateu na parede
-//								long qtdVezesNoMesmoLugar = caminhoPercorrido.stream().filter(it -> it.equals(posicaoAtual)).count();
-//								this.penalidades += PENALIDADE_REPETINDO + (qtdVezesNoMesmoLugar * 5);
-//						}
 				}
 
 				if (labirinto.saiuLabirinto(novaPosicao)) {

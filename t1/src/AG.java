@@ -94,14 +94,14 @@ public class AG {
 				return populacao;
 		}
 
-		//calcula a aptidao somando a distancia euclidiana da ultima posicao do cromossomo ate a saida + penalidades que sofreu ao andar pelo labirinto
+		//calcula a aptidao somando a distancia de manhattan da ultima posicao do cromossomo ate a saida + penalidades que sofreu ao andar pelo labirinto
 		public int aptidao(Cromossomo cromossomo) {
 				Agente agente = new Agente(this.labirinto);
 				agente.percorrerTrajetoPeloLabirinto(cromossomo);
 				// fitness = | (x2-x1) | + | (y2-y1) | + accumulated penalties
 				Posicao saida = labirinto.getFim();
 				Posicao posAtualAgente = agente.getPosicaoAtual();
-				int score = (saida.getPosX() - posAtualAgente.getPosX()) + (saida.getPosY() - posAtualAgente.getPosX()) + agente.getPenalidades();
+				int score = Math.abs((saida.getPosX() - posAtualAgente.getPosX())) + Math.abs((saida.getPosY() - posAtualAgente.getPosX())) + agente.getPenalidades();
 				cromossomo.setScore(score);
 				cromossomo.setChegou(agente.getAchouSaida());
 				cromossomo.setPosicoes(agente.getCaminhoPercorrido());

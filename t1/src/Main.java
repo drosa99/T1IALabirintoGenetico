@@ -8,13 +8,14 @@ import java.util.List;
 public class Main {
 
 		public static void main(String[] args) {
-				int tamanhoPopulacao = args.length == 4 ? Integer.parseInt(args[0]) : 21;
-				int qtdMovimentos = args.length == 4 ? Integer.parseInt(args[1]) : 50;
-				int chanceMutacao = args.length == 4 ? Integer.parseInt(args[2]) : 85;
-				int qtdGeracoesPrint = args.length == 4 ? Integer.parseInt(args[3]) : 1000;
+				int tamanhoPopulacao = args.length == 5 ? Integer.parseInt(args[0]) : 21;
+				int qtdMovimentos = args.length == 5 ? Integer.parseInt(args[1]) : 50;
+				int chanceMutacao = args.length == 5 ? Integer.parseInt(args[2]) : 85;
+				int qtdGeracoesPrint = args.length == 5 ? Integer.parseInt(args[3]) : 1000;
+				String nomeLabirinto = args.length == 5 ? args[4] : "lab.txt";
 
 				try {
-						File f = new File("files/lab.txt");
+						File f = new File("files/" + nomeLabirinto);
 						FileWriter fw = new FileWriter(new File("resultado.txt"));
 
 
